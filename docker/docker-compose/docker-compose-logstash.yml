@@ -1,0 +1,20 @@
+version: '3'
+services:
+  logstatsh:
+    image: docker.elastic.co/logstash/logstash:6.2.4
+    restart: always
+    volumes:
+      - /data/logstash/conf.d:/usr/share/logstash/pipeline/:ro
+      - /data/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - /data/logstash/data/GeoLite2-City.mmdb:/usr/share/logstash/config/GeoLite2-City.mmdb:ro
+      - /etc/localtime:/etc/localtime:ro
+#      - /var/lib/docker:/var/lib/docker
+      - /var/log/zabbix/:/var/log/zabbix/
+#    net: "host"
+    network_mode: "host"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://10.51.2.20:514"
+        syslog-facility: "local6"
+        tag: "logstash"
