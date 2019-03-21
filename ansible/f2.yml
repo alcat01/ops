@@ -1,0 +1,8 @@
+---
+ - name: del file
+   file: 
+    path: /tmp/{{item}}
+    state: absent
+   with_items:
+    - 1.txt
+    - 1.txx

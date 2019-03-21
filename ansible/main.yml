@@ -1,0 +1,5 @@
+---
+ - hosts: all
+   tasks:
+     - include_tasks: f1.yml
+     - include_tasks: f2.yml

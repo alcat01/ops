@@ -1,0 +1,20 @@
+---
+  - hosts: all
+    tasks:
+    - name: create file
+      file: 
+       path: /tmp/{{item}}
+       state: touch
+       mode: 0600
+      with_items:
+       - file1.txt
+       - file2.txt
+      tags: Crfile
+    - name : Del file
+      file:
+       path: /tmp/{{item}}
+       state: absent
+      with_items:
+       - file1.txt
+       - file2.txt
+      tags: Dlfile

@@ -1,0 +1,41 @@
+---
+  - name: copy zabbix-agent rmp file to centos
+    copy: src={{item}} dest=/tmp/
+    with_items:
+     - zabbix-agent-3.4.3-1.el7.x86_64.rpm
+    when: 
+     - ansible_os_family == "RedHat"
+    tags: zabbix-agent
+  - name: install zabbix-agent
+    yum:  name=/home/lixd/zabbix-agent-3.4.3-1.el7.x86_64.rpm state=installed
+#   yum:  name=zabbix-agent state=removed
+    when:
+     - ansible_os_family == "RedHat"
+    tags: zabbix-agent
+  - name: Copy zabbix-agent file  to ubuntu
+    copy: src=zabbix-release_3.4-1+xenial_all.deb dets=/tmp/
+    when: 
+     - ansible_os_family == "Debian"
+    tags: zabbix-agent
+  - name: update zabbix-agent to ubuntu
+    apt: deb=/tmp/zabbix-release_3.4-1+xenial_all.deb
+    when: ansible_os_family == "Debian"
+    tags: zabbix-agent
+  - name: install zabbix-agent to ubuntu 
+    apt: name=zabbix-agent state=installed
+    when: 
+     - ansible_os_family == "Debian"
+    tags: zabbix-agent
+  - name: start zabbix-agent
+    service: name=zabbix-agent state=started enabled=yes
+  - name: Configure zabbix_agent.conf 
+    template: src={{item}} dest=/etc/zabbix/zabbix_agentd.conf 
+    with_items:
+     - zabbix_agentd.conf
+    notify:
+     - Restart zabbix-agent
+  - name: check zabbix-agent status
+    shell: systemctl status zabbix-agent
+    register: System_status
+  - name: check 
+    debug: msg={{System_status.stdout_lines}}

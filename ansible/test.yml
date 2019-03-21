@@ -1,0 +1,52 @@
+---
+  - hosts: test1
+    become: yes
+    become_user: root
+    become_method: sudo 
+    vars:
+     - filename : docker.info
+    tasks:
+    - name: coyp file to /tmp
+      copy: src=/home/lixd/ansible/file/master1.txt dest=/tmp/master1.txt owner=lixd group=lixd
+    - name: "create file"
+      file:
+        path: /tmp/{{item}}
+        owner: lixd
+        group: lixd
+        mode: 0644
+        state: touch
+      with_items:
+        - aaa.txt
+        - bbb.txt
+    - name: check docker info
+      shell: docker info  >/tmp/{{ filename }}
+    - name: Modify the file
+      file: path=/tmp/{{ filename }} owner=lixd group=lixd mode=0644
+    - name: removed tree lrzsz httpd
+      yum: 
+        name: "{{ item }}"
+        state: removed
+      with_items:
+        - tree
+        - lrzsz
+        - httpd
+    - name: install tree lrzsz 
+      yum:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - tree
+        - lrzsz
+#      notify:
+#        - start httpd   
+    - name: update index.html
+      copy: src=/tmp/index.html dest=/var/www/html/ mode=0644
+    handlers:
+      - name: start httpd
+        service: name=httpd state=started 
+      - name: remove httpd
+        yum: name=httpd state=removed
+  - hosts: test2
+    tasks:
+    - name: test file
+      file: path=/tmp/test1.txt state=touch
