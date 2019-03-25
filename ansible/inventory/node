@@ -1,4 +1,4 @@
-[test]
+[zabbix_agent]
 10.0.12.10
-[test2]
+[Create_User]
 10.0.12.8

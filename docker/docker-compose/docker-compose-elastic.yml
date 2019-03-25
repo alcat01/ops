@@ -1,0 +1,27 @@
+version: '2'
+services:
+  elasticsearch01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "ELASTIC_PASSWORD=Elmeast@123"
+      - "ES_JAVA_OPTS=-Xms12288m -Xmx12288m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/elas/data:/usr/share/elasticsearch/data
+      - /data/elas/logs:/usr/share/elasticsearch/logs
+      - /data/elas/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - /data/elas/config/jvm.options:/usr/share/elasticsearch/config/jvm.options:ro
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        syslog-facility: "local6"
+        tag: "elastic"

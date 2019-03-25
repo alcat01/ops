@@ -1,3 +1,4 @@
 ---
   - name: create user
-    user: name=elmeast create_home=yes
+    user: name={{ User_name }} create_home=yes
+  

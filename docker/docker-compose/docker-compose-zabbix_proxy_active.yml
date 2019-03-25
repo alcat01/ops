@@ -1,0 +1,56 @@
+version: '2'
+services:
+  mysql-server:
+    image: registry.udncloud.com/zabbix/mysql-zabbix-proxy:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: "zabbix_proxy"
+      MYSQL_USER: "zabbix"
+      MYSQL_PASSWORD: "Databea_zab01"
+      MYSQL_ROOT_PASSWORD: "Databea_Root01"
+      DB_innodb_buffer_pool_size: 1024M
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/zabbix-proxy-mysql/mysql/:/var/lib/mysql
+      - /data/zabbix-proxy-mysql/etc/mysql/mysql.conf.d/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+  zabbix-proxy-mysql :
+    image: registry.udncloud.com/zabbix/zabbix-proxy-mysql:alpine-3.4.7
+    restart: always
+    environment:
+      ZBX_PROXYMODE : 0
+      DB_SERVER_HOST: "mysql-server"
+      MYSQL_USER: "zabbix"
+      MYSQL_PASSWORD: "Databea_zab01"
+      ZBX_HOSTNAME: bj-zabbix-proxy-001-Active
+      ZBX_SERVER_HOST: 10.51.2.200
+      ZBX_STARTPOLLERS: 20
+      ZBX_VMWARECACHESIZE: 1024M
+      ZBX_CACHESIZE: 1024M
+      ZBX_HISTORYCACHESIZE: 2014M
+
+    links:
+      - mysql-server
+    ports:
+      - 10051:10051
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:514"
+        syslog-facility: "local3"
+
+
+  zabbix-agent:
+    image: registry.udncloud.com/zabbix/zabbix-agent:1.0
+    restart: always
+    environment:
+      ZBX_HOSTNAME: bj-zabbix-proxy-001-Active
+      ZBX_SERVER_HOST: 10.51.2.200
+    links:
+      - zabbix-proxy-mysql:zabbix-proxy
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
