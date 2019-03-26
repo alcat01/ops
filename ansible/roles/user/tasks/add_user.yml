@@ -1,0 +1,41 @@
+---
+ - hosts: add_user
+   become: yes
+   become_user: root
+   become_method: sudo
+   tasks:
+     - name: add groups
+       group:
+         name: "{{ item.groups}}"
+         state: present
+       with_items:
+         - {groups: 'user1'} 
+         - {groups: 'user2'}
+     - name:  add user
+       user:
+         name: "{{ item.user }}"
+         state: present
+         groups: "{{ item.groups }}"
+       with_items:
+         - { user: 'user1', groups: 'user1' } 
+         - { user: 'user2', groups: 'user2' } 
+     - name: create audoers file
+       file: path=/etc/sudoers.d/{{ item.user }} state=touch owner=root group=root mode=0600
+       with_items:
+         - { user: 'user1' }   
+         - { user: 'user2' }
+     - name: update sudoers file
+       lineinfile:
+         dest: /etc/sudoers.d/{{ item.user }}
+         regexp: '^{{ item.user  }}'
+         line: '{{ item.user }} ALL=(ALL) NOPASSWD:ALL'
+       with_items:
+          - { user: 'user1' }
+          - { user: 'user2' } 
+     - name: add user key.pub
+       authorized_key: user={{ item.user }}
+                       key="{{ lookup('file','../files/id_rsa.pub') }}"
+                       state=present
+       with_items:
+          - { user: 'user1' }
+          - { user: 'user2' }

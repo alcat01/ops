@@ -1,14 +1,16 @@
 ---
   # name:create user
-  - hosts: Create_User
-    remote_user: root
-    roles:
-      - user
-
-   #name : install zabbix-agent
-  - hosts: zabbix_agent
+  - hosts: all
     become: yes
     become_user: root
     become_method: sudo
     roles:
-      - zabbix-agent
+      - {{ roles }}
+#
+#   #name : install zabbix-agent
+#  - hosts: {{ zabbix_agent }}
+#    become: yes
+#    become_user: root
+#    become_method: sudo
+#    roles:
+#      - zabbix-agent
