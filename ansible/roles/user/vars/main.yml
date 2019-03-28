@@ -1,4 +1,4 @@
 ---
-  vars: user = {{ item }}
-  
-      
+ #   aaa
+   - { user: 'user1', groups: 'user1' }    
+   - { user: 'user2', groups: 'user2' }    

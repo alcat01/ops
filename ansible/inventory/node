@@ -2,3 +2,5 @@
 10.0.12.10
 [add_user]
 10.0.12.8
+[host_name]
+10.0.12.8  host_name=test_node2

@@ -3,27 +3,30 @@
    become: yes
    become_user: root
    become_method: sudo
-   vars:
-      user: user1
-      group: user1
+#   vars_files:
+#     - ../../user/vars/main.yml
    tasks:
      - name: add group
-       group: name={{ group }} state=present
-     - name: add user
-       user: name={{ user }} group={{ group }} create_home=yes state=present
-     - name: create key directory
-       file: path=/home/{{ user }}/.ssh/ state=directory  owner={{ user }} group={{ group }} mode=0700 
-     - name: create key file
-       file: path=/home/{{ user }}/.ssh/authorized_keys state=touch owner={{ user }} group={{ group }} mode=0600
-     - name: create sudoers fil
-       file: path=/etc/sudoers.d/{{ user }} state=touch owner=root group=root mode=0600
-     - name: updata sudoers file
-       lineinfile:
-         dest: /etc/sudoers.d/{{ user }} 
+       group: 
+         name: "{{ item.groups }}" 
          state: present
-         regexp: '{{ user }}'
-         line: '{{ user }} ALL=(ALL) NOPASSWD:ALL'
-     - name: updata key to host
-       authorized_key:  user={{ user }}
-                        key="{{ lookup('file','../files/id_rsa.pub') }}"  
-                        state=present
+       with_file:
+         - ../../user/vars/main.yml
+     #- name: add user
+#       user: name={{ item.user }} group={{ group }} create_home=yes state=present
+#     - name: create key directory
+#       file: path=/home/{{ user }}/.ssh/ state=directory  owner={{ user }} group={{ group }} mode=0700 
+#     - name: create key file
+#       file: path=/home/{{ user }}/.ssh/authorized_keys state=touch owner={{ user }} group={{ group }} mode=0600
+#     - name: create sudoers fil
+#       file: path=/etc/sudoers.d/{{ user }} state=touch owner=root group=root mode=0600
+#     - name: updata sudoers file
+#       lineinfile:
+#         dest: /etc/sudoers.d/{{ user }} 
+#         state: present
+#         regexp: '{{ user }}'
+#         line: '{{ user }} ALL=(ALL) NOPASSWD:ALL'
+#     - name: updata key to host
+#       authorized_key:  user={{ user }}
+#                        key="{{ lookup('file','../files/id_rsa.pub') }}"  
+#                        state=present

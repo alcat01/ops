@@ -19,7 +19,7 @@
        with_items:
          - { user: 'user1', groups: 'user1' } 
          - { user: 'user2', groups: 'user2' } 
-     - name: create audoers file
+     - name: create sudoers file
        file: path=/etc/sudoers.d/{{ item.user }} state=touch owner=root group=root mode=0600
        with_items:
          - { user: 'user1' }   
@@ -27,7 +27,7 @@
      - name: update sudoers file
        lineinfile:
          dest: /etc/sudoers.d/{{ item.user }}
-         regexp: '^{{ item.user  }}'
+         regexp: '^{{ item.user }}'
          line: '{{ item.user }} ALL=(ALL) NOPASSWD:ALL'
        with_items:
           - { user: 'user1' }

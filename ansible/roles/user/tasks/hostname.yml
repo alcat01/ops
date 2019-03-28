@@ -1,0 +1,13 @@
+---
+ - hosts: host_name
+   become: yes
+   become_user: root
+   become_method: sudo
+   tasks:
+     - name : change  hostname
+       shell : hostnamectl --static set-hostname {{ host_name }}
+     - name : register hostname
+       shell : hostname
+       register: System_name
+     - name : chack hostname
+       debug : msg={{ System_name.stdout_lines }}
