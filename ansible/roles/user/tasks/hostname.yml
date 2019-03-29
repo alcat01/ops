@@ -7,7 +7,8 @@
      - name : change  hostname
        shell : hostnamectl --static set-hostname {{ host_name }}
      - name : register hostname
-       shell : hostname
+       shell : hostnamectl --static
        register: System_name
      - name : chack hostname
        debug : msg={{ System_name.stdout_lines }}
+       #debug: var=System_name.stdout 

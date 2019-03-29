@@ -1,0 +1,8 @@
+---
+  - hosts: file
+    become: yes
+    become_user: root
+    become_method: sudo
+    tasks:
+      - name : copy file to ansible
+        fetch: src=/tmp/1.txt dest=/home/lixd/all.txt

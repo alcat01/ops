@@ -4,3 +4,5 @@
 10.0.12.8
 [host_name]
 10.0.12.8  host_name=test_node2
+[file]
+10.0.12.8

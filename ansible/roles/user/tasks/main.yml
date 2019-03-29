@@ -3,15 +3,20 @@
    become: yes
    become_user: root
    become_method: sudo
-#   vars_files:
-#     - ../../user/vars/main.yml
    tasks:
+     - name: register vars
+       shell: echo "{{ item }}"
+       with_items:
+          - { user:'user1', groups:'user1' }
+          - { user:'user2', groups:'user2' }
+       register: agroups          
      - name: add group
-       group: 
-         name: "{{ item.groups }}" 
-         state: present
-       with_file:
-         - ../../user/vars/main.yml
+#       group: 
+#         name: "{{ item }}" 
+#         state: present
+#       debug: msg="{{ item }}"   
+       with_items:
+          - "{{ agroups }}"
      #- name: add user
 #       user: name={{ item.user }} group={{ group }} create_home=yes state=present
 #     - name: create key directory
