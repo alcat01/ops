@@ -1,1 +1,9 @@
 通过Menu 菜单方式登陆服务器,实现了基本的功能，添加主机、删除主机、连接主机，通过写入配置文件方式记录主机信息，不写入数据库
+使用方法：
+配置别名：
+vi  ~/.bashrc
+alias Mens='sh ./Menu.sh'
+source .bashrc
+
+执行
+>Menu 
