@@ -1,5 +1,8 @@
 #/bin/bash
 Hosts=./hosts.cfg
+if [ ! -e $Hosts ] ; then
+touch ${Hosts}
+then
 while true ;do
 clear
 printf  "\033[32m Please enter the host name:_\033[0m"
